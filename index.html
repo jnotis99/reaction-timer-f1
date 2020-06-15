@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>"Lights Out" Reaction Timer</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <!-- <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.5/jquery.mobile.min.css"> -->
+</head>
+
+<body>
+  <main>
+    <div id="content">
+      <div id="lights-container">
+        <div class="back-strip"></div>
+        <div class="light-col" id="1">
+          <div class="light"></div>
+          <div class="light"></div>
+          <div class="light"></div>
+          <div class="light"></div>
+        </div>
+        <div class="light-col" id="2">
+          <div class="light"></div>
+          <div class="light"></div>
+          <div class="light"></div>
+          <div class="light"></div>
+        </div>
+        <div class="light-col" id="3">
+          <div class="light"></div>
+          <div class="light"></div>
+          <div class="light"></div>
+          <div class="light"></div>
+        </div>
+        <div class="light-col" id="4">
+          <div class="light" ::before></div>
+          <div class="light"></div>
+          <div class="light"></div>
+          <div class="light"></div>
+        </div>
+        <div class="light-col" id="5">
+          <div class="light"></div>
+          <div class="light"></div>
+          <div class="light"></div>
+          <div class="light"></div>
+        </div>
+      </div>
+      <button class="start">Start</button>
+      <div class="text">
+        <p>Press the button to start the light sequence. Click/tap anywhere once it's lights out.</p>
+        <h2 id="time">Your time:</h2>
+      </div>
+    </div>
+  </main>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.5/jquery.mobile.min.js"></script> -->
+  <script src="main.js"></script>
+</body>
+
+</html>
