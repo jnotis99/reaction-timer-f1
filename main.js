@@ -1,11 +1,15 @@
 let lightSeq = false;
 let lightsOut = false;
 let falseStart = false;
+let buttonPress = false;
 let start = null;
 localStorage.setItem('best', "none");
 
 $(".start").click(() => {
-  if (!lightSeq && !lightsOut) lightSequence();
+  if (!lightSeq && !lightsOut && !buttonPress) {
+    buttonPress = true;
+    lightSequence();
+  }
 });
 
 function resetLights() {
@@ -21,6 +25,7 @@ function lightSequence() {
   lightSeq = true;
   pauseTime = 1000;
   pause(10, 1, falseStart).then((result) => {
+    buttonPress = false;
     $(`#${result}`).addClass("on");
     return pause(pauseTime, 2, falseStart)
   }).then((result) => {
@@ -35,13 +40,13 @@ function lightSequence() {
   }).then((result) => {
     $(`#${result}`).addClass("on");
     const outTimer = 4000 + (Math.random() * 3000);
-    console.log(outTimer);
     return pause(outTimer, null)
   }).then(() => {
     resetLights();
     lightSeq = false;
     lightsOut = true;
-    start = new Date();
+    // start = new Date();
+    start = performance.now();
   }).catch((error) => {
     resetLights();
     falseStart = false;
@@ -78,14 +83,15 @@ function pause(duration, result, error) {
 
 /**
  * 
- * @param {Date} start date object representing the time the lights go out
+ * @param {Number} start Time (in ms) when lights go out
+ * @param {Number} end Time (in ms) whe
  * @returns a Promise that succeeds if both times are non-null/undefined 
  *          the result for .then(result=>{}) is the time it took for the user to click the button 
  */
 function calculateTime(start, end) {
   return new Promise((fulfill, reject) => {
     if (start && end) {
-      fulfill ((end.getTime() - start.getTime())/ 1000);
+      fulfill ((Math.round(end - start)) / 1000);
     } else {
       reject('cannot find both times')
     }
@@ -102,9 +108,9 @@ function checkBestTime(prevTime) {
 
 /**
  * Handles the necessary tasks (calculating time, setting best time) when the user reacts
+ * @param {Number} end time at click
  */
-function handleReaction() {
-  const end = new Date();
+function handleReaction(end) {
   calculateTime(start, end).then((result) => {
     lightsOut = false;
     $("#time").html(`Your time: ${result} seconds`);
@@ -116,7 +122,12 @@ function handleReaction() {
  * Event listener for click - only take action after "lights out"
  */
 $("body").click(() => {
-  if (lightsOut) handleReaction();
+  const end = performance.now();
+  if (lightsOut) handleReaction(end);
+  else if (lightSeq && !buttonPress) {
+    falseStart = true;
+    $("#time").html(`False Start!`);
+  }
 })
 
 /**
