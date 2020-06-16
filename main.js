@@ -2,6 +2,7 @@ let lightSeq = false;
 let lightsOut = false;
 let falseStart = false;
 let start = null;
+localStorage.setItem('best', "none");
 
 $(".start").click(() => {
   if (!lightSeq && !lightsOut) lightSequence();
@@ -91,27 +92,36 @@ function calculateTime(start, end) {
   })
 }
 
+function checkBestTime(prevTime) {
+  bestTime = localStorage.getItem('best');
+  if (bestTime === "none" || prevTime < bestTime) {
+    localStorage.setItem('best', prevTime);
+    $("#best-time").html(`Your best time: ${prevTime} seconds`);
+  }
+}
+
+/**
+ * Handles the necessary tasks (calculating time, setting best time) when the user reacts
+ */
+function handleReaction() {
+  const end = new Date();
+  calculateTime(start, end).then((result) => {
+    lightsOut = false;
+    $("#time").html(`Your time: ${result} seconds`);
+    checkBestTime(result);
+  });
+}
+
 /**
  * Event listener for click - only take action after "lights out"
  */
 $("body").click(() => {
-  if (lightsOut) {
-    const end = new Date();
-    console.log("go!");
-    calculateTime(start, end).then((result) => {
-      console.log(result);
-      lightsOut = false;
-      $("#time").html(`Your time: ${result} seconds`);
-    });
-  }
+  if (lightsOut) handleReaction();
 })
 
 /**
  * Event listener for tap (mobile) - only take action after "lights out"
  */
 $("body").on("tap", () => {
-  if (lightsOut) {
-    console.log("go!");
-    lightsOut = false;
-  }
+  if (lightsOut) handleReaction();
 })
